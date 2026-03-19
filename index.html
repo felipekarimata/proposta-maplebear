@@ -3,993 +3,1266 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Inspire Pilates — Inteligência Artificial para sua Rede</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<title>Eyes Bot — Proposta Maple Bear</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-/* ── RESET & VARS ── */
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 :root {
-  --blue-900: #0c1f3d;
-  --blue-800: #153060;
-  --blue-700: #1a4080;
-  --blue-600: #1e52a8;
-  --blue-500: #2563d4;
-  --blue-400: #4a80e8;
-  --blue-300: #7aa4f0;
-  --blue-100: #dce9fc;
-  --blue-50:  #f0f6ff;
-  --gray-900: #111827;
-  --gray-700: #374151;
-  --gray-500: #6b7280;
-  --gray-300: #d1d5db;
-  --gray-100: #f3f4f6;
-  --white:    #ffffff;
-  --green:    #16a34a;
-  --green-bg: #f0fdf4;
-  --radius:   12px;
-  --radius-lg:20px;
-}
-html { scroll-behavior: smooth; }
-body {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  color: var(--gray-900);
-  background: var(--white);
-  -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+  --bg: #050608;
+  --bg2: #0a0c10;
+  --bg3: #0f1118;
+  --surface: #13151f;
+  --surface2: #191c28;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.04);
+  --cyan: #00d4ff;
+  --cyan2: rgba(0,212,255,0.12);
+  --cyan3: rgba(0,212,255,0.06);
+  --gold: #f0c060;
+  --gold2: rgba(240,192,96,0.12);
+  --gold3: rgba(240,192,96,0.06);
+  --green: #34d399;
+  --red: #f87171;
+  --text: #e8ecf4;
+  --text2: #8892a8;
+  --text3: #454d60;
+  --plan1: #00d4ff;
+  --plan2: #f0c060;
 }
 
-/* ── LAYOUT ── */
-.container { max-width: 1100px; margin: 0 auto; padding: 0 40px; }
-section { padding: 100px 0; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Outfit',sans-serif;
+  font-weight:300;
+  line-height:1.6;
+  overflow-x:hidden;
+}
+
+/* noise */
+body::after{
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity:0.022;
+  pointer-events:none;
+  z-index:999;
+}
+
+/* ── CURSOR ── */
+.cursor{
+  width:8px;height:8px;
+  background:var(--cyan);
+  border-radius:50%;
+  position:fixed;
+  pointer-events:none;
+  z-index:9999;
+  transition:transform 0.15s, opacity 0.3s;
+  mix-blend-mode:screen;
+}
 
 /* ── NAV ── */
-nav {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-  background: rgba(255,255,255,0.9);
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--gray-300);
-  padding: 16px 0;
-  transition: box-shadow .3s;
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px 56px;
+  border-bottom:1px solid var(--border2);
+  background:rgba(5,6,8,0.9);
+  backdrop-filter:blur(24px);
 }
-nav.shadow { box-shadow: 0 2px 20px rgba(0,0,0,0.07); }
-.nav-inner {
-  display: flex; align-items: center; justify-content: space-between;
+.nav-logo{
+  font-family:'Playfair Display',serif;
+  font-weight:900;font-size:18px;
+  color:var(--text);letter-spacing:-0.01em;
 }
-.logo {
-  font-family: 'Instrument Serif', serif;
-  font-size: 22px;
-  color: var(--blue-800);
-  text-decoration: none;
-  letter-spacing: -.01em;
+.nav-logo em{color:var(--cyan);font-style:normal;}
+.nav-pill{
+  display:flex;align-items:center;gap:6px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:100px;
+  padding:6px 16px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;color:var(--text2);
+  letter-spacing:0.06em;
 }
-.nav-links { display: flex; gap: 36px; list-style: none; }
-.nav-links a {
-  font-size: 14px; font-weight: 500;
-  color: var(--gray-700);
-  text-decoration: none;
-  transition: color .2s;
+.nav-pill .dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.nav-validity{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;color:var(--red);
+  letter-spacing:0.05em;
+  display:flex;align-items:center;gap:8px;
 }
-.nav-links a:hover { color: var(--blue-600); }
-.nav-btn {
-  background: var(--blue-600);
-  color: white;
-  font-size: 14px; font-weight: 600;
-  padding: 10px 22px;
-  border-radius: 8px;
-  text-decoration: none;
-  transition: background .2s;
-}
-.nav-btn:hover { background: var(--blue-700); }
+.nav-validity::before{content:'⚠';font-size:12px;}
 
 /* ── HERO ── */
-.hero {
-  padding-top: 160px;
-  padding-bottom: 120px;
-  background: var(--white);
-  position: relative;
+#hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:140px 56px 80px;
+  position:relative;overflow:hidden;
+  max-width:100%;
 }
-.hero::before {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0; height: 500px;
-  background: linear-gradient(180deg, var(--blue-50) 0%, transparent 100%);
-  z-index: 0;
+.hero-glow{
+  position:absolute;border-radius:50%;filter:blur(140px);pointer-events:none;
 }
-.hero-inner {
-  position: relative; z-index: 1;
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 72px; align-items: center;
-}
-.hero-badge {
-  display: inline-flex; align-items: center; gap: 8px;
-  background: var(--white);
-  border: 1px solid var(--blue-300);
-  border-radius: 99px;
-  padding: 6px 14px 6px 8px;
-  font-size: 13px; font-weight: 500; color: var(--blue-700);
-  margin-bottom: 28px;
-}
-.badge-dot {
-  width: 8px; height: 8px; border-radius: 50%;
-  background: var(--blue-500);
-  animation: pulse 2s ease-in-out infinite;
-}
-@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.6;transform:scale(.85)} }
-.hero-title {
-  font-family: 'Instrument Serif', serif;
-  font-size: clamp(38px, 4.5vw, 54px);
-  line-height: 1.12;
-  color: var(--blue-900);
-  letter-spacing: -.02em;
-  margin-bottom: 22px;
-}
-.hero-title em {
-  font-style: italic;
-  color: var(--blue-600);
-}
-.hero-sub {
-  font-size: 17px; font-weight: 400;
-  color: var(--gray-500);
-  line-height: 1.75;
-  margin-bottom: 40px;
-}
-.hero-btns { display: flex; gap: 14px; flex-wrap: wrap; }
-.btn-primary {
-  display: inline-flex; align-items: center; gap: 8px;
-  background: var(--blue-600);
-  color: white;
-  font-size: 15px; font-weight: 600;
-  padding: 14px 28px;
-  border-radius: var(--radius);
-  text-decoration: none;
-  border: none; cursor: pointer;
-  transition: all .2s;
-}
-.btn-primary:hover { background: var(--blue-700); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(37,99,212,.25); }
-.btn-outline {
-  display: inline-flex; align-items: center; gap: 8px;
-  background: transparent;
-  color: var(--blue-700);
-  font-size: 15px; font-weight: 600;
-  padding: 14px 28px;
-  border-radius: var(--radius);
-  border: 1.5px solid var(--blue-300);
-  text-decoration: none; cursor: pointer;
-  transition: all .2s;
-}
-.btn-outline:hover { border-color: var(--blue-600); background: var(--blue-50); }
+.hg1{width:700px;height:700px;background:radial-gradient(circle,rgba(0,212,255,0.1),transparent 70%);top:-200px;right:-100px;animation:gf 14s ease-in-out infinite;}
+.hg2{width:400px;height:400px;background:radial-gradient(circle,rgba(240,192,96,0.07),transparent 70%);bottom:-100px;left:10%;animation:gf 10s ease-in-out infinite reverse;}
+@keyframes gf{0%,100%{transform:scale(1) translate(0,0)}50%{transform:scale(1.08) translate(20px,-30px)}}
 
-/* ── WHATSAPP MOCKUP ── */
-.wpp-card {
-  background: var(--white);
-  border-radius: 24px;
-  overflow: hidden;
-  box-shadow: 0 24px 80px rgba(0,0,0,.1), 0 4px 16px rgba(0,0,0,.06);
-  border: 1px solid var(--gray-300);
-  max-width: 340px;
-  margin: 0 auto;
-}
-.wpp-header {
-  background: #075e54;
-  padding: 14px 18px;
-  display: flex; align-items: center; gap: 12px;
-}
-.wpp-avatar {
-  width: 40px; height: 40px;
-  background: linear-gradient(135deg,#25d366,#128c7e);
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  color: white; font-size: 16px; font-weight: 700;
-  font-family: 'Instrument Serif', serif;
-  flex-shrink: 0;
-}
-.wpp-name { color: white; font-size: 14px; font-weight: 600; }
-.wpp-status { color: rgba(255,255,255,.7); font-size: 12px; }
-.wpp-body {
-  background: #e5ddd5;
-  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 30c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10z' fill='%23d4c9b8' opacity='.3'/%3E%3C/svg%3E");
-  padding: 16px 12px;
-  min-height: 320px;
-  display: flex; flex-direction: column; gap: 8px;
-}
-.w-msg {
-  max-width: 82%;
-  padding: 9px 13px;
-  border-radius: 10px;
-  font-size: 13px; line-height: 1.5;
-}
-.w-msg.bot {
-  background: white;
-  border-bottom-left-radius: 2px;
-  align-self: flex-start;
-  color: #111;
-  box-shadow: 0 1px 2px rgba(0,0,0,.08);
-}
-.w-msg.user {
-  background: #d9fdd3;
-  border-bottom-right-radius: 2px;
-  align-self: flex-end;
-  color: #111;
-  box-shadow: 0 1px 2px rgba(0,0,0,.08);
-}
-.w-time { font-size: 10px; color: #999; text-align: right; margin-top: 2px; }
-.wpp-typing {
-  align-self: flex-start;
-  background: white;
-  border-radius: 10px; border-bottom-left-radius: 2px;
-  padding: 12px 16px;
-  display: flex; gap: 4px; align-items: center;
-  box-shadow: 0 1px 2px rgba(0,0,0,.08);
-}
-.wpp-typing span {
-  width: 6px; height: 6px;
-  background: #999;
-  border-radius: 50%;
-  animation: wtyp 1.3s ease-in-out infinite;
-}
-.wpp-typing span:nth-child(2) { animation-delay: .17s; }
-.wpp-typing span:nth-child(3) { animation-delay: .34s; }
-@keyframes wtyp { 0%,60%,100%{transform:translateY(0);opacity:.4} 30%{transform:translateY(-5px);opacity:1} }
+.hero-inner{max-width:1280px;margin:0 auto;width:100%;position:relative;z-index:2;}
 
-/* ── STATS BAR ── */
-.stats-bar {
-  padding: 48px 0;
-  border-top: 1px solid var(--gray-100);
-  border-bottom: 1px solid var(--gray-100);
+.hero-tag{
+  display:inline-flex;align-items:center;gap:10px;
+  border:1px solid var(--border);
+  padding:6px 16px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--text2);margin-bottom:32px;
 }
-.stats-inner {
-  display: grid; grid-template-columns: repeat(4, 1fr);
-  gap: 0; text-align: center;
+.hero-tag span{color:var(--cyan);}
+
+h1.hero-title{
+  font-family:'Playfair Display',serif;
+  font-weight:900;
+  font-size:clamp(72px,10vw,148px);
+  line-height:0.88;
+  letter-spacing:-0.03em;
+  margin-bottom:48px;
 }
-.stats-inner .stat-item + .stat-item {
-  border-left: 1px solid var(--gray-100);
-}
-.stat-num {
-  font-family: 'Instrument Serif', serif;
-  font-size: 42px;
-  color: var(--blue-700);
-  letter-spacing: -.02em;
-  line-height: 1;
-}
-.stat-label {
-  font-size: 13px; color: var(--gray-500);
-  margin-top: 6px; line-height: 1.4;
+h1.hero-title .t1{display:block;color:var(--text);}
+h1.hero-title .t2{display:block;color:var(--cyan);-webkit-text-stroke:0px;}
+h1.hero-title .t3{
+  display:block;
+  font-family:'Outfit',sans-serif;
+  font-weight:300;
+  font-size:clamp(14px,1.4vw,20px);
+  color:var(--text2);
+  letter-spacing:0.02em;
+  margin-top:20px;
+  line-height:1.5;
 }
 
-/* ── SECTION HEADERS ── */
-.sh { text-align: center; margin-bottom: 56px; }
-.sh .overline {
-  display: inline-block;
-  font-size: 12px; font-weight: 600; letter-spacing: .1em;
-  text-transform: uppercase; color: var(--blue-600);
-  margin-bottom: 14px;
+.hero-plans-preview{
+  display:flex;gap:16px;flex-wrap:wrap;
 }
-.sh h2 {
-  font-family: 'Instrument Serif', serif;
-  font-size: clamp(30px, 3.5vw, 44px);
-  color: var(--blue-900);
-  letter-spacing: -.02em;
-  line-height: 1.15;
-  margin-bottom: 16px;
+.plan-chip{
+  display:flex;align-items:center;gap:12px;
+  border:1px solid var(--border);
+  padding:14px 24px;
+  background:var(--surface);
+  transition:all 0.3s;
+  cursor:pointer;
 }
-.sh h2 em { font-style: italic; color: var(--blue-600); }
-.sh p {
-  font-size: 17px; color: var(--gray-500);
-  line-height: 1.7; max-width: 520px; margin: 0 auto;
+.plan-chip:hover{transform:translateY(-2px);}
+.plan-chip.c1{border-color:var(--cyan2);background:var(--cyan3);}
+.plan-chip.c2{border-color:var(--gold2);background:var(--gold3);}
+.chip-name{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;}
+.c1 .chip-name{color:var(--cyan);}
+.c2 .chip-name{color:var(--gold);}
+.chip-price{
+  font-family:'JetBrains Mono',monospace;
+  font-size:13px;
+  padding:3px 10px;
+  border-radius:2px;
+}
+.c1 .chip-price{background:var(--cyan2);color:var(--cyan);}
+.c2 .chip-price{background:var(--gold2);color:var(--gold);}
+.chip-desc{font-size:12px;color:var(--text2);margin-top:2px;}
+
+.hero-footer-strip{
+  display:flex;gap:0;
+  border:1px solid var(--border);
+  margin-top:56px;
+  overflow:hidden;
+}
+.hfs-item{
+  flex:1;padding:20px 28px;
+  border-right:1px solid var(--border);
+}
+.hfs-item:last-child{border-right:none;}
+.hfs-label{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--text3);margin-bottom:6px;}
+.hfs-val{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--text);}
+.hfs-val.accent-c{color:var(--cyan);}
+.hfs-val.accent-r{color:var(--red);}
+
+/* ── SECTION WRAPPER ── */
+.sec{
+  max-width:1280px;margin:0 auto;width:100%;
+  padding:100px 56px;
+}
+.sec-full{max-width:100%;padding-left:0;padding-right:0;}
+.sec-label{
+  display:flex;align-items:center;gap:12px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--cyan);margin-bottom:16px;
+}
+.sec-label::before{content:'';display:block;width:28px;height:1px;background:var(--cyan);}
+h2.sec-title{
+  font-family:'Playfair Display',serif;
+  font-weight:900;
+  font-size:clamp(36px,4.5vw,60px);
+  line-height:1.05;letter-spacing:-0.02em;
+  margin-bottom:16px;
+}
+.sec-sub{font-size:16px;color:var(--text2);max-width:520px;line-height:1.75;margin-bottom:64px;}
+
+/* ── O QUE É ── */
+.what-row{
+  display:grid;grid-template-columns:1fr 1fr;gap:2px;
+  background:var(--border2);border:1px solid var(--border2);
+}
+.what-card{
+  background:var(--bg2);padding:48px;
+  position:relative;overflow:hidden;
+  transition:background 0.4s;
+}
+.what-card:hover{background:var(--bg3);}
+.wc-num{
+  font-family:'Playfair Display',serif;font-weight:900;
+  font-size:96px;line-height:1;
+  color:rgba(255,255,255,0.03);
+  margin-bottom:20px;
+  transition:color 0.4s;
+}
+.what-card:hover .wc-num{color:rgba(0,212,255,0.06);}
+.wc-bar{width:32px;height:2px;background:var(--cyan);margin-bottom:20px;}
+.wc-title{font-family:'Playfair Display',serif;font-weight:700;font-size:20px;color:var(--cyan);margin-bottom:14px;}
+.wc-body{font-size:15px;color:var(--text2);line-height:1.8;}
+
+/* ── PLANS ── */
+#plans{background:var(--bg2);}
+.plans-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:2px;
+  background:var(--border2);
+}
+.plan-card{
+  background:var(--bg);padding:0;
+  position:relative;overflow:hidden;
+  display:flex;flex-direction:column;
+}
+.plan-header{
+  padding:44px 44px 32px;
+  border-bottom:1px solid var(--border);
+  position:relative;
+}
+.plan-header::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+}
+.p1 .plan-header::before{background:linear-gradient(90deg,var(--cyan),transparent);}
+.p2 .plan-header::before{background:linear-gradient(90deg,var(--gold),transparent);}
+
+.plan-tier{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;letter-spacing:0.2em;text-transform:uppercase;
+  margin-bottom:12px;
+}
+.p1 .plan-tier{color:var(--cyan);}
+.p2 .plan-tier{color:var(--gold);}
+
+.plan-name{
+  font-family:'Playfair Display',serif;font-weight:900;
+  font-size:32px;line-height:1.1;margin-bottom:6px;
+}
+.plan-tagline{font-size:14px;color:var(--text2);margin-bottom:28px;}
+
+.plan-price{
+  display:flex;align-items:baseline;gap:6px;
+  margin-bottom:8px;
+}
+.price-cur{font-family:'JetBrains Mono',monospace;font-size:18px;color:var(--text2);}
+.price-val{
+  font-family:'Playfair Display',serif;font-weight:900;
+  font-size:56px;line-height:1;letter-spacing:-0.03em;
+}
+.p1 .price-val{color:var(--cyan);}
+.p2 .price-val{color:var(--gold);}
+.price-note{font-size:12px;color:var(--text3);font-family:'JetBrains Mono',monospace;}
+
+.plan-body{padding:36px 44px;flex:1;}
+.plan-section-title{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--text3);margin-bottom:16px;margin-top:28px;
+}
+.plan-section-title:first-child{margin-top:0;}
+
+.feature-list{list-style:none;display:flex;flex-direction:column;gap:10px;}
+.feature-list li{
+  display:flex;align-items:flex-start;gap:12px;
+  font-size:14px;color:var(--text2);line-height:1.5;
+}
+.feature-list li .fi{
+  width:18px;height:18px;flex:none;margin-top:1px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;border-radius:50%;
+}
+.p1 .feature-list li .fi{background:var(--cyan2);color:var(--cyan);}
+.p2 .feature-list li .fi{background:var(--gold2);color:var(--gold);}
+
+.plan-footer{
+  padding:24px 44px 36px;
+  border-top:1px solid var(--border);
+}
+.plan-cta{
+  display:flex;align-items:center;justify-content:space-between;
+}
+.plan-badge{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;letter-spacing:0.08em;
+  padding:5px 12px;border-radius:2px;
+}
+.p1 .plan-badge{background:var(--cyan2);color:var(--cyan);border:1px solid rgba(0,212,255,0.2);}
+.p2 .plan-badge{background:var(--gold2);color:var(--gold);border:1px solid rgba(240,192,96,0.2);}
+
+/* ── COMPARE TABLE ── */
+.compare-wrap{
+  background:var(--surface);
+  border:1px solid var(--border);
+  overflow:hidden;
+  margin-top:48px;
+}
+.compare-row{
+  display:grid;grid-template-columns:2fr 1fr 1fr;
+  border-bottom:1px solid var(--border2);
+}
+.compare-row:last-child{border-bottom:none;}
+.compare-row.header{background:var(--surface2);}
+.compare-cell{
+  padding:16px 24px;
+  font-size:13px;color:var(--text2);
+  display:flex;align-items:center;gap:8px;
+  border-right:1px solid var(--border2);
+}
+.compare-cell:last-child{border-right:none;}
+.compare-row.header .compare-cell{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--text3);
+}
+.compare-cell.c1-col{justify-content:center;}
+.compare-cell.c2-col{justify-content:center;}
+.chk{font-size:14px;}
+.chk.yes-c{color:var(--cyan);}
+.chk.yes-g{color:var(--gold);}
+.chk.no{color:var(--text3);}
+
+/* ── WHATSAPP OPTIONS ── */
+.wp-section{margin-top:0;}
+.wp-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--border2);}
+.wp-card{background:var(--bg2);padding:40px;}
+.wp-card-header{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  margin-bottom:28px;
+}
+.wp-card-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;margin-bottom:6px;}
+.wp-card-sub{font-size:12px;color:var(--text3);font-family:'JetBrains Mono',monospace;}
+.wp-badge{
+  font-family:'JetBrains Mono',monospace;font-size:9px;
+  letter-spacing:0.1em;text-transform:uppercase;
+  padding:4px 10px;border-radius:2px;white-space:nowrap;
+}
+.wp-badge.safe{background:rgba(52,211,153,0.1);color:var(--green);border:1px solid rgba(52,211,153,0.2);}
+.wp-badge.fast{background:rgba(248,113,113,0.1);color:var(--red);border:1px solid rgba(248,113,113,0.2);}
+
+.wp-stack{margin-bottom:24px;}
+.stack-label{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text3);margin-bottom:10px;}
+.stack-flow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.stack-node{
+  background:var(--surface);border:1px solid var(--border);
+  padding:8px 14px;font-size:12px;color:var(--text2);
+  font-family:'JetBrains Mono',monospace;
+  white-space:nowrap;
+}
+.stack-node.highlight{border-color:var(--cyan2);color:var(--cyan);}
+.stack-arrow{color:var(--text3);font-size:14px;}
+
+.wp-reqs{margin-top:24px;}
+.req-list{list-style:none;display:flex;flex-direction:column;gap:8px;}
+.req-list li{font-size:13px;color:var(--text2);padding-left:18px;position:relative;line-height:1.5;}
+.req-list li::before{content:'→';position:absolute;left:0;color:var(--cyan);font-size:11px;}
+
+/* ── INFRA ── */
+#infra{background:var(--bg);}
+.infra-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--border2);}
+.infra-card{
+  background:var(--bg2);padding:36px;
+  position:relative;overflow:hidden;
+}
+.infra-icon{font-size:32px;margin-bottom:20px;display:block;}
+.infra-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;margin-bottom:10px;}
+.infra-desc{font-size:13px;color:var(--text2);line-height:1.7;}
+.infra-tag{
+  display:inline-flex;margin-top:16px;
+  font-family:'JetBrains Mono',monospace;font-size:9px;
+  letter-spacing:0.1em;text-transform:uppercase;
+  padding:4px 10px;border:1px solid var(--border);color:var(--text3);
 }
 
-/* ── COMO FUNCIONA ── */
-.how-section { background: var(--white); }
-.flow-grid {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 60px; align-items: center; margin-bottom: 80px;
+/* ── INVEST ── */
+#invest{background:var(--bg2);}
+.invest-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--border2);}
+.invest-card{background:var(--bg);padding:52px;}
+.invest-card-label{
+  font-family:'JetBrains Mono',monospace;font-size:9px;
+  letter-spacing:0.2em;text-transform:uppercase;
+  margin-bottom:8px;
 }
-.flow-grid.reverse { direction: rtl; }
-.flow-grid.reverse > * { direction: ltr; }
-.flow-step-visual {
-  background: var(--blue-50);
-  border: 1px solid var(--blue-100);
-  border-radius: var(--radius-lg);
-  padding: 40px 32px;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
+.ic1 .invest-card-label{color:var(--cyan);}
+.ic2 .invest-card-label{color:var(--gold);}
+.invest-card-name{
+  font-family:'Playfair Display',serif;font-weight:900;font-size:24px;
+  margin-bottom:28px;
 }
-.flow-step-visual::before {
-  content: '';
-  position: absolute; top: -40px; right: -40px;
-  width: 120px; height: 120px;
-  background: radial-gradient(circle, rgba(37,99,212,.12) 0%, transparent 70%);
-  border-radius: 50%;
+.invest-amount{
+  display:flex;align-items:baseline;gap:4px;margin-bottom:6px;
 }
-.step-icon {
-  width: 72px; height: 72px;
-  background: var(--blue-600);
-  border-radius: 20px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 30px;
-  margin: 0 auto 20px;
+.ia-cur{font-family:'JetBrains Mono',monospace;font-size:16px;color:var(--text2);}
+.ia-val{
+  font-family:'Playfair Display',serif;font-weight:900;
+  font-size:64px;line-height:1;letter-spacing:-0.03em;
 }
-.flow-step-visual h3 {
-  font-family: 'Instrument Serif', serif;
-  font-size: 22px; color: var(--blue-900);
-  margin-bottom: 8px;
-}
-.flow-step-visual p { font-size: 14px; color: var(--gray-500); line-height: 1.65; }
+.ic1 .ia-val{color:var(--cyan);}
+.ic2 .ia-val{color:var(--gold);}
+.ia-note{font-size:12px;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-bottom:40px;}
 
-.flow-details { padding: 8px 0; }
-.flow-num {
-  font-size: 12px; font-weight: 700; letter-spacing: .1em;
-  text-transform: uppercase; color: var(--blue-500);
-  margin-bottom: 12px;
+.payment-track{display:flex;flex-direction:column;gap:0;border:1px solid var(--border);overflow:hidden;}
+.pt-row{
+  display:flex;align-items:center;gap:16px;
+  padding:16px 20px;border-bottom:1px solid var(--border2);
 }
-.flow-title {
-  font-family: 'Instrument Serif', serif;
-  font-size: 30px; color: var(--blue-900);
-  line-height: 1.2; letter-spacing: -.02em;
-  margin-bottom: 16px;
+.pt-row:last-child{border-bottom:none;}
+.pt-step{
+  width:28px;height:28px;flex:none;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  border:1px solid var(--border);color:var(--text3);
 }
-.flow-title em { font-style: italic; color: var(--blue-600); }
-.flow-desc {
-  font-size: 16px; color: var(--gray-500);
-  line-height: 1.75; margin-bottom: 28px;
-}
-.check-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-.check-list li {
-  display: flex; align-items: flex-start; gap: 12px;
-  font-size: 15px; color: var(--gray-700); line-height: 1.5;
-}
-.check-list .ck {
-  width: 22px; height: 22px;
-  background: var(--blue-100);
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0; margin-top: 1px;
-  color: var(--blue-700); font-size: 11px; font-weight: 700;
-}
+.pt-info{flex:1;}
+.pt-name{font-size:14px;color:var(--text);}
+.pt-sub{font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace;}
+.pt-val{font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--text2);}
 
-/* ── JORNADA COMPLETA ── */
-.journey-section { background: var(--blue-50); }
-.journey-grid {
-  display: grid; grid-template-columns: repeat(5,1fr);
-  gap: 0; position: relative;
-  align-items: start;
-}
-.journey-grid::before {
-  content: '';
-  position: absolute; top: 35px; left: 10%; right: 10%;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--blue-300), var(--blue-600), var(--blue-300), transparent);
-}
-.journey-step { text-align: center; padding: 0 8px; position: relative; z-index: 1; }
-.j-icon {
-  width: 70px; height: 70px;
-  background: var(--white);
-  border: 2px solid var(--blue-300);
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 26px;
-  margin: 0 auto 16px;
-  transition: all .3s;
-  box-shadow: 0 4px 16px rgba(37,99,212,.1);
-}
-.journey-step:hover .j-icon {
-  border-color: var(--blue-600);
-  box-shadow: 0 8px 24px rgba(37,99,212,.2);
-  transform: translateY(-3px);
-}
-.j-title {
-  font-weight: 600; font-size: 14px;
-  color: var(--blue-900); margin-bottom: 6px;
-}
-.j-desc { font-size: 12px; color: var(--gray-500); line-height: 1.5; }
+.ic1 .pt-step{border-color:var(--cyan2);}
+.ic2 .pt-step{border-color:var(--gold2);}
 
-/* ── BENEFÍCIOS FRANQUEADO ── */
-.benefits-section { background: var(--white); }
-.benefits-grid {
-  display: grid; grid-template-columns: repeat(3,1fr);
-  gap: 24px;
+/* ── ESCOPO ── */
+#escopo{background:var(--bg);}
+.escopo-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.escopo-card{
+  border:1px solid var(--border);
+  padding:36px;background:var(--surface);
+  position:relative;
 }
-.benefit-card {
-  background: var(--white);
-  border: 1px solid var(--gray-100);
-  border-radius: var(--radius-lg);
-  padding: 32px 28px;
-  transition: all .3s;
-}
-.benefit-card:hover {
-  border-color: var(--blue-300);
-  box-shadow: 0 8px 32px rgba(37,99,212,.08);
-  transform: translateY(-3px);
-}
-.benefit-icon {
-  font-size: 28px; margin-bottom: 18px;
-  display: block;
-}
-.benefit-title {
-  font-weight: 700; font-size: 17px;
-  color: var(--blue-900); margin-bottom: 10px;
-}
-.benefit-desc { font-size: 14px; color: var(--gray-500); line-height: 1.7; }
+.escopo-card.ok{border-color:rgba(52,211,153,0.15);}
+.escopo-card.warn{border-color:rgba(240,192,96,0.15);background:var(--gold3);}
+.escopo-icon{font-size:24px;margin-bottom:16px;display:block;}
+.escopo-title{font-family:'Playfair Display',serif;font-weight:700;font-size:18px;margin-bottom:16px;}
+.escopo-card.warn .escopo-title{color:var(--gold);}
+.escopo-list{list-style:none;display:flex;flex-direction:column;gap:9px;}
+.escopo-list li{font-size:13px;color:var(--text2);padding-left:18px;position:relative;line-height:1.5;}
+.escopo-list li::before{content:'✓';position:absolute;left:0;color:var(--green);font-size:11px;}
+.escopo-card.warn .escopo-list li::before{content:'!';color:var(--gold);}
 
-/* ── COMPARAÇÃO ── */
-.compare-section { background: var(--gray-100); }
-.compare-grid {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 28px;
+.deadline-box{
+  margin-top:32px;
+  background:rgba(52,211,153,0.05);
+  border:1px solid rgba(52,211,153,0.2);
+  padding:24px 28px;
+  display:flex;gap:16px;align-items:flex-start;
 }
-.compare-card {
-  border-radius: var(--radius-lg);
-  padding: 36px 32px;
-}
-.compare-card.before {
-  background: var(--white);
-  border: 1.5px solid var(--gray-300);
-}
-.compare-card.after {
-  background: var(--blue-900);
-  border: 1.5px solid var(--blue-700);
-}
-.compare-label {
-  display: inline-block;
-  font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
-  padding: 5px 12px; border-radius: 99px;
-  margin-bottom: 24px;
-}
-.compare-card.before .compare-label { background: var(--gray-100); color: var(--gray-500); }
-.compare-card.after .compare-label { background: rgba(37,99,212,.25); color: var(--blue-300); }
-.compare-card h3 {
-  font-family: 'Instrument Serif', serif;
-  font-size: 22px; margin-bottom: 20px;
-}
-.compare-card.before h3 { color: var(--gray-700); }
-.compare-card.after h3 { color: white; }
-.compare-item {
-  display: flex; align-items: flex-start; gap: 12px;
-  padding: 10px 0;
-  border-bottom: 1px solid;
-  font-size: 14px; line-height: 1.5;
-}
-.compare-card.before .compare-item { border-color: var(--gray-100); color: var(--gray-700); }
-.compare-card.after .compare-item { border-color: rgba(255,255,255,.08); color: rgba(255,255,255,.8); }
-.compare-item:last-child { border: none; }
-.ci-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.db-icon{font-size:20px;flex:none;margin-top:2px;}
+.db-text{font-size:14px;color:rgba(52,211,153,0.9);line-height:1.6;}
+.db-text strong{color:var(--green);display:block;margin-bottom:4px;font-family:'Playfair Display',serif;font-size:16px;}
 
-/* ── EVO INTEGRATION ── */
-.evo-section { background: var(--white); }
-.evo-inner {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 72px; align-items: center;
+/* ── TIMELINE ── */
+#timeline{background:var(--bg2);}
+.tl-list{display:flex;flex-direction:column;position:relative;}
+.tl-line{
+  position:absolute;left:20px;top:0;bottom:0;width:1px;
+  background:linear-gradient(to bottom, var(--cyan), rgba(0,212,255,0.1));
 }
-.evo-text .overline {
-  font-size: 12px; font-weight: 700; letter-spacing: .1em;
-  text-transform: uppercase; color: var(--blue-600);
-  display: block; margin-bottom: 14px;
+.tl-item{
+  display:flex;gap:40px;padding:28px 0 28px 60px;
+  position:relative;border-bottom:1px solid var(--border2);
+  transition:padding-left 0.3s;
 }
-.evo-text h2 {
-  font-family: 'Instrument Serif', serif;
-  font-size: 36px; color: var(--blue-900);
-  letter-spacing: -.02em; line-height: 1.2;
-  margin-bottom: 18px;
+.tl-item:last-child{border-bottom:none;}
+.tl-item:hover{padding-left:72px;background:var(--surface);}
+.tl-dot{
+  position:absolute;left:8px;top:32px;
+  width:24px;height:24px;
+  border:1px solid var(--cyan2);background:var(--bg2);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--cyan);
+  z-index:1;
 }
-.evo-text h2 em { font-style: italic; color: var(--blue-600); }
-.evo-text p { font-size: 16px; color: var(--gray-500); line-height: 1.75; margin-bottom: 28px; }
-.evo-visual {
-  background: var(--blue-50);
-  border: 1px solid var(--blue-100);
-  border-radius: var(--radius-lg);
-  padding: 32px;
+.tl-phase{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text3);margin-bottom:6px;}
+.tl-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:8px;}
+.tl-desc{font-size:14px;color:var(--text2);line-height:1.65;max-width:580px;}
+.tl-badge{
+  margin-left:auto;flex:none;align-self:flex-start;margin-top:4px;
+  font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.08em;
+  padding:4px 10px;border:1px solid var(--border);color:var(--text3);
+  white-space:nowrap;
 }
-.evo-flow {
-  display: flex; flex-direction: column; gap: 0;
-}
-.evo-row {
-  display: flex; align-items: center; gap: 14px;
-  padding: 14px 18px;
-  background: var(--white);
-  border-radius: var(--radius);
-  border: 1px solid var(--blue-100);
-  margin-bottom: 10px;
-}
-.evo-row-icon {
-  width: 40px; height: 40px;
-  border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 18px; flex-shrink: 0;
-}
-.evo-row-title { font-size: 14px; font-weight: 600; color: var(--blue-900); }
-.evo-row-sub { font-size: 12px; color: var(--gray-500); }
-.evo-arrow {
-  text-align: center; color: var(--blue-400);
-  font-size: 18px; margin: -4px 0 6px;
-}
+.tl-badge.urgent{border-color:rgba(248,113,113,0.3);color:var(--red);}
+.tl-badge.payment{border-color:var(--cyan2);color:var(--cyan);}
 
 /* ── CTA ── */
-.cta-section {
-  background: var(--blue-900);
-  padding: 100px 0;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
+#cta{
+  position:relative;overflow:hidden;
+  background:var(--bg);
+  border-top:1px solid var(--border2);
 }
-.cta-section::before {
-  content: '';
-  position: absolute; top: -200px; left: 50%; transform: translateX(-50%);
-  width: 700px; height: 500px;
-  background: radial-gradient(ellipse, rgba(37,99,212,.4) 0%, transparent 65%);
+.cta-bg-text{
+  position:absolute;
+  font-family:'Playfair Display',serif;font-weight:900;
+  font-size:clamp(120px,18vw,280px);
+  color:rgba(255,255,255,0.015);
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  pointer-events:none;white-space:nowrap;letter-spacing:-0.05em;
 }
-.cta-section > .container { position: relative; z-index: 1; }
-.cta-section h2 {
-  font-family: 'Instrument Serif', serif;
-  font-size: clamp(34px, 4vw, 50px);
-  color: white; letter-spacing: -.02em; line-height: 1.12;
-  margin-bottom: 20px;
+.cta-inner{
+  max-width:1280px;margin:0 auto;
+  padding:100px 56px;
+  display:flex;flex-direction:column;align-items:center;
+  text-align:center;
+  position:relative;z-index:2;
 }
-.cta-section h2 em { font-style: italic; color: #90bdf8; }
-.cta-section p { font-size: 17px; color: rgba(255,255,255,.55); margin-bottom: 44px; line-height: 1.7; }
-.cta-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
-.btn-white {
-  display: inline-flex; align-items: center; gap: 8px;
-  background: white; color: var(--blue-800);
-  font-size: 15px; font-weight: 700;
-  padding: 15px 32px; border-radius: var(--radius);
-  text-decoration: none; transition: all .2s;
+.cta-kicker{
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--cyan);margin-bottom:20px;
 }
-.btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,.2); }
-.btn-ghost-w {
-  display: inline-flex; align-items: center; gap: 8px;
-  background: transparent; color: rgba(255,255,255,.8);
-  font-size: 15px; font-weight: 600;
-  padding: 15px 32px; border-radius: var(--radius);
-  border: 1.5px solid rgba(255,255,255,.25);
-  text-decoration: none; transition: all .2s;
+.cta-title{
+  font-family:'Playfair Display',serif;font-weight:900;
+  font-size:clamp(44px,6vw,80px);
+  line-height:1.05;letter-spacing:-0.02em;
+  margin-bottom:20px;
 }
-.btn-ghost-w:hover { border-color: rgba(255,255,255,.55); background: rgba(255,255,255,.07); }
-.trust-row {
-  display: flex; gap: 36px; justify-content: center;
-  margin-top: 52px; flex-wrap: wrap;
-}
-.trust-item {
-  display: flex; align-items: center; gap: 8px;
-  font-size: 13px; color: rgba(255,255,255,.45);
-}
-.trust-item span { font-size: 16px; }
+.cta-title span{color:var(--cyan);}
+.cta-sub{font-size:17px;color:var(--text2);max-width:440px;line-height:1.7;margin-bottom:48px;}
 
-/* ── FOOTER ── */
-footer {
-  background: #070f1f;
-  padding: 40px 0;
-  border-top: 1px solid rgba(255,255,255,.06);
+.cta-choices{
+  display:grid;grid-template-columns:1fr 1fr;gap:16px;
+  width:100%;max-width:700px;margin-bottom:40px;
 }
-.footer-inner {
-  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+.choice-btn{
+  padding:20px 24px;
+  border:1px solid var(--border);
+  background:var(--surface);
+  cursor:pointer;text-align:left;
+  transition:all 0.3s;
+  text-decoration:none;display:block;
 }
-.footer-logo {
-  font-family: 'Instrument Serif', serif;
-  font-size: 18px; color: rgba(255,255,255,.6);
-}
-.footer-copy { font-size: 13px; color: rgba(255,255,255,.3); }
-.footer-valid {
-  font-size: 12px; color: rgba(255,255,255,.25);
-  background: rgba(255,255,255,.05);
-  padding: 6px 14px; border-radius: 8px;
+.choice-btn:hover{transform:translateY(-4px);}
+.cb1{border-color:var(--cyan2);background:var(--cyan3);}
+.cb2{border-color:var(--gold2);background:var(--gold3);}
+.cb-label{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:6px;}
+.cb1 .cb-label{color:var(--cyan);}
+.cb2 .cb-label{color:var(--gold);}
+.cb-name{font-family:'Playfair Display',serif;font-weight:700;font-size:18px;color:var(--text);margin-bottom:2px;}
+.cb-price{font-family:'JetBrains Mono',monospace;font-size:14px;}
+.cb1 .cb-price{color:var(--cyan);}
+.cb2 .cb-price{color:var(--gold);}
+
+.cta-footer{
+  margin-top:56px;padding-top:32px;border-top:1px solid var(--border2);
+  display:flex;justify-content:space-between;width:100%;
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  color:var(--text3);letter-spacing:0.05em;flex-wrap:wrap;gap:12px;
 }
 
-/* ── FADE ANIMATIONS ── */
-.reveal {
-  opacity: 0; transform: translateY(24px);
-  transition: opacity .6s cubic-bezier(.16,1,.3,1), transform .6s cubic-bezier(.16,1,.3,1);
-}
-.reveal.visible { opacity: 1; transform: translateY(0); }
-.reveal-d1 { transition-delay: .1s; }
-.reveal-d2 { transition-delay: .18s; }
-.reveal-d3 { transition-delay: .26s; }
-.reveal-d4 { transition-delay: .34s; }
-.reveal-d5 { transition-delay: .42s; }
+/* ── ANIMATIONS ── */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity 0.7s ease,transform 0.7s ease;}
+.reveal.on{opacity:1;transform:none;}
+.stagger>*{opacity:0;transform:translateY(16px);transition:opacity 0.5s ease,transform 0.5s ease;}
+.stagger.on>*:nth-child(1){opacity:1;transform:none;transition-delay:0s;}
+.stagger.on>*:nth-child(2){opacity:1;transform:none;transition-delay:0.08s;}
+.stagger.on>*:nth-child(3){opacity:1;transform:none;transition-delay:0.16s;}
+.stagger.on>*:nth-child(4){opacity:1;transform:none;transition-delay:0.24s;}
+.stagger.on>*:nth-child(5){opacity:1;transform:none;transition-delay:0.32s;}
+.stagger.on>*:nth-child(6){opacity:1;transform:none;transition-delay:0.40s;}
 
-/* ── RESPONSIVE ── */
-@media (max-width: 900px) {
-  .hero-inner, .flow-grid, .flow-grid.reverse,
-  .compare-grid, .evo-inner { grid-template-columns: 1fr; gap: 40px; }
-  .flow-grid.reverse { direction: ltr; }
-  .stats-inner, .journey-grid { grid-template-columns: 1fr 1fr; }
-  .benefits-grid { grid-template-columns: 1fr 1fr; }
-  .nav-links { display: none; }
-  .container { padding: 0 24px; }
-  section { padding: 72px 0; }
-}
-@media (max-width: 600px) {
-  .stats-inner, .benefits-grid { grid-template-columns: 1fr; }
-  .journey-grid { grid-template-columns: 1fr 1fr; }
-  .journey-grid::before { display: none; }
-}
+::-webkit-scrollbar{width:3px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--text3);}
+::-webkit-scrollbar-thumb:hover{background:var(--cyan);}
+
+/* divider */
+.divider{height:1px;background:var(--border2);margin:0;}
 </style>
 </head>
 <body>
 
+<div class="cursor" id="cursor"></div>
+
 <!-- NAV -->
-<nav id="nav">
-  <div class="container nav-inner">
-    <a href="#" class="logo">Inspire Pilates</a>
-    <ul class="nav-links">
-      <li><a href="#como-funciona">Como funciona</a></li>
-      <li><a href="#jornada">Jornada do cliente</a></li>
-      <li><a href="#beneficios">Benefícios</a></li>
-      <li><a href="#evo">Integração EVO</a></li>
-    </ul>
-    <a href="#contato" class="nav-btn">Falar com a equipe</a>
-  </div>
+<nav>
+  <div class="nav-logo">Eyes<em>Bot</em> × Maple Bear</div>
+  <div class="nav-pill"><div class="dot"></div> Proposta ativa</div>
+  <div class="nav-validity">Válida por 3 dias</div>
 </nav>
 
-<!-- HERO -->
-<section class="hero" id="home">
-  <div class="container">
-    <div class="hero-inner">
-      <div>
-        <div class="hero-badge">
-          <div class="badge-dot"></div>
-          Inteligência Artificial para redes de franquias
+<!-- ══ HERO ══ -->
+<section id="hero">
+  <div class="hero-glow hg1"></div>
+  <div class="hero-glow hg2"></div>
+  <div class="hero-inner">
+    <div class="hero-tag">Proposta Comercial <span>·</span> Maple Bear <span>·</span> Março 2026</div>
+
+    <h1 class="hero-title">
+      <span class="t1">EYES</span>
+      <span class="t2">BOT</span>
+      <span class="t3">Assistente de IA via WhatsApp para o evento da rede de franquias.<br>Escuta os franqueados. Responde em tempo real. Gera insights.</span>
+    </h1>
+
+    <div class="hero-plans-preview stagger">
+      <div class="plan-chip c1">
+        <div>
+          <div class="chip-name">Plano Essential</div>
+          <div class="chip-desc">IA completa + WhatsApp + Relatório Excel</div>
         </div>
-        <h1 class="hero-title">
-          Um WhatsApp que<br><em>trabalha por você</em><br>em cada unidade
-        </h1>
-        <p class="hero-sub">
-          Cada franqueado tem uma assistente inteligente no WhatsApp que tira dúvidas, agenda aulas, confirma horários e integra com o EVO — tudo automaticamente, 24 horas por dia.
-        </p>
-        <div class="hero-btns">
-          <a href="#como-funciona" class="btn-primary">Ver como funciona →</a>
-          <a href="#jornada" class="btn-outline">Jornada do cliente</a>
+        <div class="chip-price">R$ 10.000</div>
+      </div>
+      <div class="plan-chip c2">
+        <div>
+          <div class="chip-name">Plano Premium</div>
+          <div class="chip-desc">Tudo do Essential + Dashboard inteligente</div>
+        </div>
+        <div class="chip-price">R$ 12.000</div>
+      </div>
+    </div>
+
+    <div class="hero-footer-strip stagger">
+      <div class="hfs-item">
+        <div class="hfs-label">Infra</div>
+        <div class="hfs-val">Na sua estrutura</div>
+      </div>
+      <div class="hfs-item">
+        <div class="hfs-label">Seus dados</div>
+        <div class="hfs-val">100% de vocês</div>
+      </div>
+      <div class="hfs-item">
+        <div class="hfs-label">WhatsApp</div>
+        <div class="hfs-val">Oficial ou não</div>
+      </div>
+      <div class="hfs-item">
+        <div class="hfs-label">Validade</div>
+        <div class="hfs-val accent-r">3 dias</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ O QUE FAZ ══ -->
+<section style="background:var(--bg);">
+  <div class="sec">
+    <div class="sec-label">01 — O que é</div>
+    <h2 class="sec-title">Dois papéis.<br>Um canal.</h2>
+    <p class="sec-sub">A IA atua durante o evento via WhatsApp como assistente inteligente da rede — respondendo e escutando os franqueados ao mesmo tempo.</p>
+
+    <div class="what-row reveal">
+      <div class="what-card">
+        <div class="wc-num">01</div>
+        <div class="wc-bar"></div>
+        <div class="wc-title">Respondedor Inteligente</div>
+        <p class="wc-body">Responde dúvidas dos franqueados em tempo real com base nos manuais, documentos e dados da Maple Bear. A IA consulta a base de conhecimento (RAG) treinada com o material de vocês — sem inventar, sem generalizar.</p>
+      </div>
+      <div class="what-card">
+        <div class="wc-num">02</div>
+        <div class="wc-bar" style="background:var(--gold);"></div>
+        <div class="wc-title" style="color:var(--gold);">Escuta Ativa + Insights</div>
+        <p class="wc-body">Os franqueados relatam dores, sugestões e feedbacks naturalmente pelo WhatsApp. A IA registra, categoriza e estrutura tudo — gerando insights e relatórios consolidados com os principais temas do evento.</p>
+      </div>
+    </div>
+
+    <!-- Propriedade dos dados -->
+    <div class="deadline-box reveal" style="margin-top:32px;background:rgba(0,212,255,0.04);border-color:var(--cyan2);">
+      <div class="db-icon">🔐</div>
+      <div class="db-text" style="color:var(--text2);">
+        <strong style="color:var(--cyan);">Seus dados, sua propriedade intelectual</strong>
+        Toda informação coletada no evento — feedbacks, dores, sugestões dos franqueados — pertence 100% à Maple Bear. A infraestrutura roda na nossa estrutura por até 2 dias sem custo adicional de infra. Após esse período, definimos a melhor solução juntos.
+      </div>
+    </div>
+
+    <div class="deadline-box reveal" style="margin-top:16px;background:rgba(52,211,153,0.04);border-color:rgba(52,211,153,0.2);">
+      <div class="db-icon">🛠️</div>
+      <div class="db-text" style="color:var(--text2);">
+        <strong style="color:var(--green);">Suporte em tempo real durante os 2 dias de evento — já incluso</strong>
+        Fico de plantão durante todo o evento. Qualquer ajuste, correção ou melhoria que surgir na hora — resposta da IA, fluxo do bot, algo que precise ser alterado — resolvo imediatamente, sem custo adicional. Você não fica na mão durante o evento.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ PLANOS ══ -->
+<section id="plans" style="background:var(--bg2);">
+  <div class="sec">
+    <div class="sec-label">02 — Planos</div>
+    <h2 class="sec-title">Escolha o seu nível</h2>
+    <p class="sec-sub">Dois planos completos. A diferença está na profundidade dos relatórios e análises pós-evento.</p>
+
+    <div class="plans-grid reveal">
+      <!-- ESSENTIAL -->
+      <div class="plan-card p1">
+        <div class="plan-header">
+          <div class="plan-tier">Plano Essential</div>
+          <div class="plan-name">IA Completa<br>+ Excel</div>
+          <div class="plan-tagline">Tudo que você precisa para o evento</div>
+          <div class="plan-price">
+            <span class="price-cur">R$</span>
+            <span class="price-val">10.000</span>
+          </div>
+          <div class="price-note">// pagamento 50% entrada · 50% entrega</div>
+        </div>
+
+        <div class="plan-body">
+          <div class="plan-section-title">// IA & Atendimento</div>
+          <ul class="feature-list">
+            <li><span class="fi">✓</span>IA treinada nos documentos da Maple Bear (RAG)</li>
+            <li><span class="fi">✓</span>Respostas automáticas 24/7 durante o evento</li>
+            <li><span class="fi">✓</span>Escuta ativa de dores e sugestões dos franqueados</li>
+            <li><span class="fi">✓</span>Categorização automática dos feedbacks coletados</li>
+          </ul>
+
+          <div class="plan-section-title">// WhatsApp (você escolhe)</div>
+          <ul class="feature-list">
+            <li><span class="fi">✓</span>API Oficial Meta — mais seguro e estável</li>
+            <li><span class="fi">✓</span>API Não Oficial (Evolution API) — ativação imediata</li>
+          </ul>
+
+          <div class="plan-section-title">// Infraestrutura</div>
+          <ul class="feature-list">
+            <li><span class="fi">✓</span>Servidor + n8n configurados na nossa estrutura</li>
+            <li><span class="fi">✓</span>2 dias de infra sem custo adicional</li>
+            <li><span class="fi">✓</span>Banco de dados das interações</li>
+          </ul>
+
+          <div class="plan-section-title">// Relatórios</div>
+          <ul class="feature-list">
+            <li><span class="fi">✓</span>Exportação completa dos dados para Excel</li>
+            <li><span class="fi">✓</span>Interações, feedbacks e temas categorizados</li>
+          </ul>
+
+          <div class="plan-section-title">// Suporte no Evento</div>
+          <ul class="feature-list">
+            <li><span class="fi">✓</span>Plantão nos 2 dias de evento — já incluso</li>
+            <li><span class="fi">✓</span>Ajustes em tempo real durante o evento</li>
+          </ul>
+
+          <div class="plan-section-title">// Observações</div>
+          <ul class="feature-list">
+            <li><span class="fi">·</span><span style="color:var(--text3);">Custo da API OpenAI (GPT) por conta do cliente — pago por uso direto à OpenAI</span></li>
+          </ul>
+        </div>
+
+        <div class="plan-footer">
+          <div class="plan-cta">
+            <div class="plan-badge">Entrega completa</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--cyan);">R$ 10.000 →</div>
+          </div>
         </div>
       </div>
-      <div>
-        <div class="wpp-card">
-          <div class="wpp-header">
-            <div class="wpp-avatar">IP</div>
-            <div>
-              <div class="wpp-name">Inspire Pilates — Vila Madalena</div>
-              <div class="wpp-status">🟢 Online agora</div>
-            </div>
+
+      <!-- PREMIUM -->
+      <div class="plan-card p2">
+        <div class="plan-header" style="position:relative;">
+          <div style="position:absolute;top:16px;right:16px;background:var(--gold2);border:1px solid rgba(240,192,96,0.3);padding:4px 10px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.1em;color:var(--gold);">RECOMENDADO</div>
+          <div class="plan-tier">Plano Premium</div>
+          <div class="plan-name">IA Completa<br>+ Dashboard</div>
+          <div class="plan-tagline">Para quem quer insights profundos pós-evento</div>
+          <div class="plan-price">
+            <span class="price-cur">R$</span>
+            <span class="price-val">12.000</span>
           </div>
-          <div class="wpp-body" id="chat">
-            <div class="w-msg bot">Olá! Sou a assistente da Inspire Pilates 💙 Posso te ajudar com informações, agendar sua aula experimental ou tirar dúvidas. Como posso ajudar?<div class="w-time">09:14</div></div>
-            <div class="w-msg user">Quero fazer uma aula experimental<div class="w-time">09:15</div></div>
-            <div class="wpp-typing" id="typing1"><span></span><span></span><span></span></div>
-          </div>
+          <div class="price-note">// pagamento 50% entrada · 50% entrega</div>
         </div>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- STATS BAR -->
-<div class="stats-bar">
-  <div class="container">
-    <div class="stats-inner">
-      <div class="stat-item reveal reveal-d1">
-        <div class="stat-num">&lt;15s</div>
-        <div class="stat-label">tempo de resposta<br>ao lead</div>
-      </div>
-      <div class="stat-item reveal reveal-d2">
-        <div class="stat-num">24h</div>
-        <div class="stat-label">atendimento contínuo,<br>sem pausas</div>
-      </div>
-      <div class="stat-item reveal reveal-d3">
-        <div class="stat-num">+70%</div>
-        <div class="stat-label">projeção de aumento<br>em agendamentos</div>
-      </div>
-      <div class="stat-item reveal reveal-d4">
-        <div class="stat-num">0h</div>
-        <div class="stat-label">horas do franqueado<br>em atendimento manual</div>
-      </div>
-    </div>
-  </div>
-</div>
+        <div class="plan-body">
+          <div class="plan-section-title">// Tudo do Essential, mais:</div>
+          <ul class="feature-list" style="margin-bottom:20px;">
+            <li><span class="fi">✓</span>IA treinada nos documentos da Maple Bear (RAG)</li>
+            <li><span class="fi">✓</span>Respostas automáticas + Escuta ativa</li>
+            <li><span class="fi">✓</span>WhatsApp Oficial ou Não Oficial (sua escolha)</li>
+            <li><span class="fi">✓</span>Servidor + n8n + 2 dias de infra sem custo</li>
+          </ul>
 
-<!-- COMO FUNCIONA -->
-<section id="como-funciona" class="how-section">
-  <div class="container">
-    <div class="sh reveal">
-      <span class="overline">Como funciona</span>
-      <h2>Tudo pelo WhatsApp.<br><em>Sem complicação.</em></h2>
-      <p>O cliente faz tudo pelo canal que ele já usa. O franqueado não precisa fazer nada manualmente.</p>
-    </div>
+          <div class="plan-section-title">// Dashboard Inteligente (o diferencial)</div>
+          <ul class="feature-list">
+            <li><span class="fi">★</span>Assuntos mais discutidos no evento</li>
+            <li><span class="fi">★</span>Dados dos franqueados coletados e organizados</li>
+            <li><span class="fi">★</span>Insights automáticos com base no material enviado</li>
+            <li><span class="fi">★</span>Tópicos mais falados em ranking visual</li>
+            <li><span class="fi">★</span>Próximos passos sugeridos pela IA</li>
+            <li><span class="fi">★</span>Dashboard personalizado conforme a necessidade da Maple Bear</li>
+            <li><span class="fi">★</span>Análise do que daria para fazer com base nos docs enviados</li>
+          </ul>
 
-    <!-- Step 1 -->
-    <div class="flow-grid reveal">
-      <div class="flow-step-visual">
-        <div class="step-icon">💬</div>
-        <h3>Cliente envia mensagem</h3>
-        <p>Clicou no anúncio, viu o perfil no Instagram ou recebeu indicação. O primeiro contato vai direto para o WhatsApp da unidade.</p>
-      </div>
-      <div class="flow-details">
-        <div class="flow-num">Passo 01</div>
-        <h2 class="flow-title">A IA responde<br><em>em segundos</em></h2>
-        <p class="flow-desc">Assim que o lead envia a primeira mensagem, a assistente inteligente entra em ação. Não importa se é meia-noite de domingo — a resposta chega em menos de 15 segundos.</p>
-        <ul class="check-list">
-          <li><div class="ck">✓</div>Apresenta a unidade e a professora responsável</li>
-          <li><div class="ck">✓</div>Responde dúvidas sobre valores, horários e metodologia</li>
-          <li><div class="ck">✓</div>Usa a linguagem e o tom de voz da Inspire Pilates</li>
-          <li><div class="ck">✓</div>Nunca deixa uma mensagem sem resposta</li>
-        </ul>
-      </div>
-    </div>
+          <div class="plan-section-title">// Suporte no Evento</div>
+          <ul class="feature-list">
+            <li><span class="fi">★</span>Plantão nos 2 dias de evento — já incluso</li>
+            <li><span class="fi">★</span>Ajustes em tempo real durante o evento</li>
+          </ul>
 
-    <!-- Step 2 -->
-    <div class="flow-grid reverse reveal">
-      <div class="flow-step-visual">
-        <div class="step-icon">📅</div>
-        <h3>Agendamento automático</h3>
-        <p>A IA verifica os horários disponíveis da unidade e oferece as opções diretamente na conversa. O cliente escolhe e já está agendado.</p>
-      </div>
-      <div class="flow-details">
-        <div class="flow-num">Passo 02</div>
-        <h2 class="flow-title">Agenda a aula<br><em>sem sair do chat</em></h2>
-        <p class="flow-desc">O cliente escolhe o horário, a IA confirma o agendamento, registra no EVO System e envia uma mensagem de confirmação automática. Zero trabalho manual para o franqueado.</p>
-        <ul class="check-list">
-          <li><div class="ck">✓</div>Mostra horários disponíveis em tempo real</li>
-          <li><div class="ck">✓</div>Confirma o agendamento automaticamente</li>
-          <li><div class="ck">✓</div>Registra no EVO System na hora</li>
-          <li><div class="ck">✓</div>Envia lembrete 2h antes da aula experimental</li>
-        </ul>
-      </div>
-    </div>
+          <div class="plan-section-title">// Observações</div>
+          <ul class="feature-list">
+            <li><span class="fi">·</span><span style="color:var(--text3);">Custo da API OpenAI (GPT) por conta do cliente — pago por uso direto à OpenAI</span></li>
+          </ul>
+        </div>
 
-    <!-- Step 3 -->
-    <div class="flow-grid reveal">
-      <div class="flow-step-visual">
-        <div class="step-icon">🔄</div>
-        <h3>Follow-up automático</h3>
-        <p>Quem agendou e não apareceu? Quem ficou curioso mas não finalizou? A IA acompanha e retoma a conversa nos momentos certos.</p>
-      </div>
-      <div class="flow-details">
-        <div class="flow-num">Passo 03</div>
-        <h2 class="flow-title">Acompanha até<br><em>virar aluno</em></h2>
-        <p class="flow-desc">Nenhum lead some sem resposta. A assistente faz follow-up automático nos dias seguintes para leads que não responderam, que reagendaram ou que precisam de um empurrãozinho para fechar.</p>
-        <ul class="check-list">
-          <li><div class="ck">✓</div>Follow-up no D+1, D+3 e D+7 para leads frios</li>
-          <li><div class="ck">✓</div>Reagendamento automático para quem não foi</li>
-          <li><div class="ck">✓</div>Encaminha para o franqueado apenas leads prontos para fechar</li>
-          <li><div class="ck">✓</div>Histórico completo de cada conversa no painel</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- JORNADA DO CLIENTE -->
-<section id="jornada" class="journey-section">
-  <div class="container">
-    <div class="sh reveal">
-      <span class="overline">Jornada do cliente</span>
-      <h2>Do primeiro clique ao<br><em>plano fechado</em></h2>
-      <p>Tudo acontece dentro do WhatsApp. O cliente não precisa ligar, preencher formulário ou esperar retorno.</p>
-    </div>
-    <div class="journey-grid">
-      <div class="journey-step reveal reveal-d1">
-        <div class="j-icon">📣</div>
-        <div class="j-title">Vê o anúncio</div>
-        <div class="j-desc">Instagram, Meta Ads ou indicação de amigo</div>
-      </div>
-      <div class="journey-step reveal reveal-d2">
-        <div class="j-icon">💬</div>
-        <div class="j-title">Manda mensagem</div>
-        <div class="j-desc">Clica no botão WhatsApp e a IA já responde</div>
-      </div>
-      <div class="journey-step reveal reveal-d3">
-        <div class="j-icon">📅</div>
-        <div class="j-title">Agenda a aula</div>
-        <div class="j-desc">Escolhe horário e confirma sem sair do chat</div>
-      </div>
-      <div class="journey-step reveal reveal-d4">
-        <div class="j-icon">🧘</div>
-        <div class="j-title">Faz a aula</div>
-        <div class="j-desc">Lembrete automático 2h antes, chega pontual</div>
-      </div>
-      <div class="journey-step reveal reveal-d5">
-        <div class="j-icon">✅</div>
-        <div class="j-title">Fecha o plano</div>
-        <div class="j-desc">A IA conduz a proposta e registra tudo no EVO</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- BENEFÍCIOS DO FRANQUEADO -->
-<section id="beneficios" class="benefits-section">
-  <div class="container">
-    <div class="sh reveal">
-      <span class="overline">Para o franqueado</span>
-      <h2>Mais tempo para o que<br><em>realmente importa</em></h2>
-      <p>Com a IA cuidando do atendimento, o franqueado foca em dar aulas incríveis e crescer a unidade.</p>
-    </div>
-    <div class="benefits-grid">
-      <div class="benefit-card reveal reveal-d1">
-        <span class="benefit-icon">⏰</span>
-        <div class="benefit-title">Tempo de volta</div>
-        <p class="benefit-desc">Horas gastas respondendo WhatsApp, confirmando agendamentos e fazendo follow-up manual passam a ser feitas automaticamente. O franqueado ganha seu tempo de volta.</p>
-      </div>
-      <div class="benefit-card reveal reveal-d2">
-        <span class="benefit-icon">🌙</span>
-        <div class="benefit-title">Atendimento 24h sem esforço</div>
-        <p class="benefit-desc">Lead chegou às 23h? A IA responde na hora. Não existe mais o problema de demorar para responder e perder o interesse do potencial aluno.</p>
-      </div>
-      <div class="benefit-card reveal reveal-d3">
-        <span class="benefit-icon">📊</span>
-        <div class="benefit-title">Painel de tudo em um lugar</div>
-        <p class="benefit-desc">Quantos leads chegaram essa semana? Quantos agendaram? Quantos fecharam? O franqueado vê tudo em um painel simples, sem precisar controlar manualmente.</p>
-      </div>
-      <div class="benefit-card reveal reveal-d4">
-        <span class="benefit-icon">🔁</span>
-        <div class="benefit-title">Nenhum lead esquecido</div>
-        <p class="benefit-desc">O sistema faz follow-up automático. Quem não respondeu ontem recebe uma mensagem hoje. Quem não foi à aula experimental recebe uma nova proposta de reagendamento.</p>
-      </div>
-      <div class="benefit-card reveal reveal-d5">
-        <span class="benefit-icon">💼</span>
-        <div class="benefit-title">Profissional desde o primeiro contato</div>
-        <p class="benefit-desc">A IA usa sempre o tom de voz e o padrão de comunicação da rede. Independente de quem é o franqueado, o atendimento é consistente e profissional.</p>
-      </div>
-      <div class="benefit-card reveal reveal-d1">
-        <span class="benefit-icon">🚀</span>
-        <div class="benefit-title">Pronto em 2 horas</div>
-        <p class="benefit-desc">Nova unidade abrindo? Em menos de 2 horas o WhatsApp está configurado, integrado com o EVO e pronto para receber leads. Sem instalações, sem técnico, sem complicação.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ANTES / DEPOIS -->
-<section class="compare-section">
-  <div class="container">
-    <div class="sh reveal">
-      <span class="overline">Antes e depois</span>
-      <h2>Como a rotina do franqueado<br><em>muda completamente</em></h2>
-    </div>
-    <div class="compare-grid">
-      <div class="compare-card before reveal reveal-d1">
-        <div class="compare-label">Sem a IA</div>
-        <h3>Operação manual e desgastante</h3>
-        <div class="compare-item"><span class="ci-icon">😩</span>Responde manualmente cada mensagem no WhatsApp</div>
-        <div class="compare-item"><span class="ci-icon">📋</span>Anota agendamentos em planilha ou papel</div>
-        <div class="compare-item"><span class="ci-icon">📵</span>Leads chegando fora do horário ficam sem resposta</div>
-        <div class="compare-item"><span class="ci-icon">🤷</span>Sem acompanhamento de quem agendou e sumiu</div>
-        <div class="compare-item"><span class="ci-icon">😴</span>Cansado de ficar o dia todo no celular</div>
-        <div class="compare-item"><span class="ci-icon">❌</span>Leads esquecidos = dinheiro deixado na mesa</div>
-      </div>
-      <div class="compare-card after reveal reveal-d2">
-        <div class="compare-label">Com a IA</div>
-        <h3>Operação automática e eficiente</h3>
-        <div class="compare-item"><span class="ci-icon">🤖</span>IA responde em 15 segundos, a qualquer hora</div>
-        <div class="compare-item"><span class="ci-icon">🗓️</span>Agendamentos registrados automaticamente no EVO</div>
-        <div class="compare-item"><span class="ci-icon">🌙</span>Funciona 24h/7 dias, inclusive fins de semana</div>
-        <div class="compare-item"><span class="ci-icon">🔁</span>Follow-up automático D+1, D+3 e D+7</div>
-        <div class="compare-item"><span class="ci-icon">🎯</span>Franqueado só recebe os leads prontos para fechar</div>
-        <div class="compare-item"><span class="ci-icon">✅</span>Nenhum lead cai no esquecimento</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- INTEGRAÇÃO EVO -->
-<section id="evo" class="evo-section">
-  <div class="container">
-    <div class="evo-inner">
-      <div class="evo-text reveal">
-        <span class="overline">Integração EVO</span>
-        <h2>Conectado ao EVO<br><em>nativamente</em></h2>
-        <p>A IA se integra diretamente com o EVO System — o sistema de gestão que a Inspire Pilates já usa. Quando um cliente agenda pelo WhatsApp, tudo aparece automaticamente no EVO sem nenhuma ação manual.</p>
-        <ul class="check-list">
-          <li><div class="ck">✓</div>Agendamentos registrados automaticamente no EVO</li>
-          <li><div class="ck">✓</div>Histórico do cliente sincronizado entre WhatsApp e EVO</li>
-          <li><div class="ck">✓</div>Confirmações de aula verificadas em tempo real</li>
-          <li><div class="ck">✓</div>Franqueado não precisa fazer lançamentos manuais</li>
-        </ul>
-      </div>
-      <div class="evo-visual reveal reveal-d2">
-        <div style="font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--blue-600);margin-bottom:20px;">Fluxo de integração</div>
-        <div class="evo-flow">
-          <div class="evo-row">
-            <div class="evo-row-icon" style="background:#dcfce7;">💬</div>
-            <div>
-              <div class="evo-row-title">Cliente manda mensagem</div>
-              <div class="evo-row-sub">WhatsApp da unidade — qualquer horário</div>
-            </div>
-          </div>
-          <div class="evo-arrow">↓</div>
-          <div class="evo-row">
-            <div class="evo-row-icon" style="background:#dbeafe;">🤖</div>
-            <div>
-              <div class="evo-row-title">IA responde e agenda</div>
-              <div class="evo-row-sub">Qualifica, oferece horários, confirma</div>
-            </div>
-          </div>
-          <div class="evo-arrow">↓</div>
-          <div class="evo-row">
-            <div class="evo-row-icon" style="background:#fef9c3;">📋</div>
-            <div>
-              <div class="evo-row-title">EVO atualizado automaticamente</div>
-              <div class="evo-row-sub">Agendamento, dados do lead, status</div>
-            </div>
-          </div>
-          <div class="evo-arrow">↓</div>
-          <div class="evo-row" style="border-color:var(--blue-300);background:var(--blue-50);">
-            <div class="evo-row-icon" style="background:var(--blue-100);">✅</div>
-            <div>
-              <div class="evo-row-title" style="color:var(--blue-700);">Franqueado só aparece na aula</div>
-              <div class="evo-row-sub">Zero burocracia, zero lançamento manual</div>
-            </div>
+        <div class="plan-footer">
+          <div class="plan-cta">
+            <div class="plan-badge">Máximo valor</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--gold);">R$ 12.000 →</div>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Compare Table -->
+    <div class="compare-wrap reveal">
+      <div class="compare-row header">
+        <div class="compare-cell">Funcionalidade</div>
+        <div class="compare-cell c1-col" style="color:var(--cyan);">Essential · 10k</div>
+        <div class="compare-cell c2-col" style="color:var(--gold);">Premium · 12k</div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-cell">IA treinada nos docs (RAG)</div>
+        <div class="compare-cell c1-col"><span class="chk yes-c">✓</span></div>
+        <div class="compare-cell c2-col"><span class="chk yes-g">✓</span></div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-cell">WhatsApp (Oficial ou Não Oficial)</div>
+        <div class="compare-cell c1-col"><span class="chk yes-c">✓</span></div>
+        <div class="compare-cell c2-col"><span class="chk yes-g">✓</span></div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-cell">Escuta ativa de feedbacks</div>
+        <div class="compare-cell c1-col"><span class="chk yes-c">✓</span></div>
+        <div class="compare-cell c2-col"><span class="chk yes-g">✓</span></div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-cell">Infra na nossa estrutura (2 dias)</div>
+        <div class="compare-cell c1-col"><span class="chk yes-c">✓</span></div>
+        <div class="compare-cell c2-col"><span class="chk yes-g">✓</span></div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-cell">Dados 100% propriedade da Maple Bear</div>
+        <div class="compare-cell c1-col"><span class="chk yes-c">✓</span></div>
+        <div class="compare-cell c2-col"><span class="chk yes-g">✓</span></div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-cell">Exportação dos dados para Excel</div>
+        <div class="compare-cell c1-col"><span class="chk yes-c">✓</span></div>
+        <div class="compare-cell c2-col"><span class="chk yes-g">✓</span></div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-cell">Plantão nos 2 dias de evento</div>
+        <div class="compare-cell c1-col"><span class="chk yes-c">✓</span></div>
+        <div class="compare-cell c2-col"><span class="chk yes-g">✓</span></div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-cell">Dashboard com assuntos mais falados</div>
+        <div class="compare-cell c1-col"><span class="chk no">—</span></div>
+        <div class="compare-cell c2-col"><span class="chk yes-g">✓</span></div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-cell">Insights automáticos pós-evento</div>
+        <div class="compare-cell c1-col"><span class="chk no">—</span></div>
+        <div class="compare-cell c2-col"><span class="chk yes-g">✓</span></div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-cell">Próximos passos sugeridos pela IA</div>
+        <div class="compare-cell c1-col"><span class="chk no">—</span></div>
+        <div class="compare-cell c2-col"><span class="chk yes-g">✓</span></div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-cell">Dashboard personalizado</div>
+        <div class="compare-cell c1-col"><span class="chk no">—</span></div>
+        <div class="compare-cell c2-col"><span class="chk yes-g">✓</span></div>
+      </div>
+    </div>
   </div>
 </section>
 
+<!-- ══ WHATSAPP ══ -->
+<section style="background:var(--bg);">
+  <div class="sec">
+    <div class="sec-label">03 — WhatsApp</div>
+    <h2 class="sec-title">Você escolhe<br>como conectar</h2>
+    <p class="sec-sub">As duas opções funcionam. A diferença é estabilidade vs velocidade de ativação.</p>
 
+    <div class="wp-grid reveal">
+      <div class="wp-card">
+        <div class="wp-card-header">
+          <div>
+            <div class="wp-card-title" style="color:var(--cyan);">API Oficial Meta</div>
+            <div class="wp-card-sub">// via Facebook Business</div>
+          </div>
+          <div class="wp-badge safe">Mais seguro</div>
+        </div>
 
+        <div class="wp-stack">
+          <div class="stack-label">// Stack técnica</div>
+          <div class="stack-flow">
+            <div class="stack-node highlight">Servidor</div>
+            <div class="stack-arrow">→</div>
+            <div class="stack-node highlight">n8n</div>
+            <div class="stack-arrow">→</div>
+            <div class="stack-node highlight">WhatsApp API Oficial</div>
+            <div class="stack-arrow">→</div>
+            <div class="stack-node">Meta</div>
+          </div>
+        </div>
 
-<!-- FOOTER -->
-<footer>
-  <div class="container footer-inner">
-    <div class="footer-logo">Inspire Pilates</div>
-    <div class="footer-copy">© 2026 Inspire Pilates. Todos os direitos reservados.</div>
+        <div class="wp-reqs">
+          <div class="stack-label">// O que precisamos de vocês</div>
+          <ul class="req-list">
+            <li>Acesso ao Gerenciador de Negócios do Facebook</li>
+            <li>Verificação da conta no Meta</li>
+            <li>Validação dos documentos da empresa</li>
+            <li>Cadastro do número no Meta Business</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="wp-card">
+        <div class="wp-card-header">
+          <div>
+            <div class="wp-card-title" style="color:var(--gold);">API Não Oficial</div>
+            <div class="wp-card-sub">// via Evolution API</div>
+          </div>
+          <div class="wp-badge fast">Ativação imediata</div>
+        </div>
+
+        <div class="wp-stack">
+          <div class="stack-label">// Stack técnica</div>
+          <div class="stack-flow">
+            <div class="stack-node" style="border-color:rgba(240,192,96,0.2);color:var(--gold);">Servidor</div>
+            <div class="stack-arrow">→</div>
+            <div class="stack-node" style="border-color:rgba(240,192,96,0.2);color:var(--gold);">n8n</div>
+            <div class="stack-arrow">→</div>
+            <div class="stack-node" style="border-color:rgba(240,192,96,0.2);color:var(--gold);">Evolution API</div>
+            <div class="stack-arrow">→</div>
+            <div class="stack-node">QR Code</div>
+          </div>
+        </div>
+
+        <div class="wp-reqs">
+          <div class="stack-label">// O que precisamos de vocês</div>
+          <ul class="req-list" style="--cyan:var(--gold);">
+            <li>Número de WhatsApp disponível</li>
+            <li>Leitura do QR Code para ativar</li>
+            <li>Aceite de que pode haver instabilidades pontuais</li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </div>
-</footer>
+</section>
+
+<!-- ══ INVEST ══ -->
+<section id="invest" style="background:var(--bg2);">
+  <div class="sec">
+    <div class="sec-label">04 — Investimento</div>
+    <h2 class="sec-title">Valores e forma<br>de pagamento</h2>
+    <p class="sec-sub">Condições iguais para os dois planos. A diferença é só o escopo de entrega.</p>
+
+    <div class="invest-grid reveal">
+      <div class="invest-card ic1">
+        <div class="invest-card-label">// Plano Essential</div>
+        <div class="invest-card-name">IA Completa + Excel</div>
+        <div class="invest-amount"><span class="ia-cur">R$</span><span class="ia-val">10k</span></div>
+        <div class="ia-note">// projeto fechado — infra inclusa por 2 dias</div>
+        <div class="payment-track">
+          <div class="pt-row">
+            <div class="pt-step">01</div>
+            <div class="pt-info">
+              <div class="pt-name">Assinatura do contrato</div>
+              <div class="pt-sub">Início imediato do projeto</div>
+            </div>
+            <div class="pt-val">R$ 5.000</div>
+          </div>
+          <div class="pt-row">
+            <div class="pt-step">02</div>
+            <div class="pt-info">
+              <div class="pt-name">Entrega final</div>
+              <div class="pt-sub">Bot + integração + Excel funcionando</div>
+            </div>
+            <div class="pt-val">R$ 5.000</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="invest-card ic2">
+        <div class="invest-card-label">// Plano Premium</div>
+        <div class="invest-card-name">IA Completa + Dashboard</div>
+        <div class="invest-amount"><span class="ia-cur">R$</span><span class="ia-val">12k</span></div>
+        <div class="ia-note">// projeto fechado — infra inclusa por 2 dias</div>
+        <div class="payment-track">
+          <div class="pt-row">
+            <div class="pt-step">01</div>
+            <div class="pt-info">
+              <div class="pt-name">Assinatura do contrato</div>
+              <div class="pt-sub">Início imediato do projeto</div>
+            </div>
+            <div class="pt-val">R$ 6.000</div>
+          </div>
+          <div class="pt-row">
+            <div class="pt-step">02</div>
+            <div class="pt-info">
+              <div class="pt-name">Entrega final</div>
+              <div class="pt-sub">Bot + dashboard personalizado</div>
+            </div>
+            <div class="pt-val">R$ 6.000</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="deadline-box reveal" style="margin-top:32px;background:rgba(240,192,96,0.04);border-color:rgba(240,192,96,0.2);">
+      <div class="db-icon">💡</div>
+      <div class="db-text" style="color:rgba(240,192,96,0.8);">
+        <strong style="color:var(--gold);">Custo da API OpenAI — por conta da Maple Bear</strong>
+        O GPT é cobrado diretamente pela OpenAI por uso (pay-as-you-go). Vocês criam a conta, geram a API Key e nos passam para configurar. O custo é proporcional ao volume de interações — em um evento pontual, costuma ser bem baixo.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ ESCOPO ══ -->
+<section id="escopo" style="background:var(--bg);">
+  <div class="sec">
+    <div class="sec-label">05 — Escopo</div>
+    <h2 class="sec-title">Como garantir<br>o prazo e o valor</h2>
+    <p class="sec-sub">Para não ter surpresas, alinhamos tudo até segunda-feira. O que for definido nessa data é o escopo — qualquer adição depois é nova etapa.</p>
+
+    <div class="escopo-grid reveal">
+      <div class="escopo-card ok">
+        <span class="escopo-icon">📋</span>
+        <div class="escopo-title">O que definimos até segunda</div>
+        <ul class="escopo-list">
+          <li>Objetivo principal do bot no evento</li>
+          <li>WhatsApp Oficial ou Não Oficial</li>
+          <li>Quais documentos e dados serão usados</li>
+          <li>Acessos e credenciais (Facebook, API Key, número)</li>
+          <li>Plano escolhido: Essential ou Premium</li>
+        </ul>
+      </div>
+
+      <div class="escopo-card ok">
+        <span class="escopo-icon">📁</span>
+        <div class="escopo-title">Material que precisamos</div>
+        <ul class="escopo-list">
+          <li>Manuais e documentos operacionais da rede</li>
+          <li>FAQs e cenários de atendimento frequentes</li>
+          <li>Dados da rede que a IA pode consultar</li>
+          <li>Identidade e tom de voz da Maple Bear</li>
+          <li>Quanto mais material, melhor a IA responde</li>
+        </ul>
+      </div>
+
+      <div class="escopo-card warn">
+        <span class="escopo-icon">⚠️</span>
+        <div class="escopo-title">Mudança de escopo</div>
+        <ul class="escopo-list" style="--green:var(--gold);">
+          <li>Material novo após início do dev = nova etapa</li>
+          <li>Funcionalidades não acordadas = nova proposta</li>
+          <li>Troca de plano após início = diferença a pagar</li>
+          <li>"Construir a casa e pedir mais cômodos depois"</li>
+        </ul>
+      </div>
+
+      <div class="escopo-card" style="border-color:var(--cyan2);background:var(--cyan3);">
+        <span class="escopo-icon">⚡</span>
+        <div class="escopo-title" style="color:var(--cyan);">Por que até segunda?</div>
+        <ul class="escopo-list" style="--green:var(--cyan);">
+          <li>Para organizar a base de dados corretamente</li>
+          <li>Para treinar a IA com os cenários certos</li>
+          <li>Para não perder tempo reprocessando conteúdo</li>
+          <li>Para garantir o prazo de entrega do projeto</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ TIMELINE ══ -->
+<section id="timeline" style="background:var(--bg2);">
+  <div class="sec">
+    <div class="sec-label">06 — Próximos Passos</div>
+    <h2 class="sec-title">Do alinhamento<br>ao evento</h2>
+    <p class="sec-sub">Passos claros, responsabilidades definidas, entrega sem surpresas.</p>
+
+    <div class="tl-list reveal">
+      <div class="tl-line"></div>
+
+      <!-- 01 -->
+      <div class="tl-item">
+        <div class="tl-dot">01</div>
+        <div>
+          <div class="tl-phase">Esta semana · urgente</div>
+          <div class="tl-title">Alinhamento e fechamento do escopo</div>
+          <div class="tl-desc">Definir até segunda: objetivo do bot, WhatsApp Oficial ou não oficial, plano escolhido (Essential ou Premium) e acessos necessários. O que for definido aqui é o escopo — qualquer adição depois é nova etapa.</div>
+        </div>
+        <div class="tl-badge urgent">⚠ SEGUNDA</div>
+      </div>
+
+      <!-- 02 -->
+      <div class="tl-item">
+        <div class="tl-dot">02</div>
+        <div>
+          <div class="tl-phase">Fase 1 · responsabilidade do cliente</div>
+          <div class="tl-title">Envio de documentos, dados e cenários</div>
+          <div class="tl-desc">A Maple Bear envia todos os manuais, FAQs, processos e materiais da rede. <strong style="color:var(--text);font-weight:500;">Importante:</strong> a IA só responde bem aquilo que foi treinada. Se um franqueado perguntar sobre algo que não está nos docs — como "a comida na escola está ruim" — a IA pode inventar ou ser genérica. Quanto mais cenários e conteúdo vocês enviarem, mais precisa e útil será a IA no evento.</div>
+        </div>
+        <div class="tl-badge">CLIENTE</div>
+      </div>
+
+      <!-- 03 -->
+      <div class="tl-item">
+        <div class="tl-dot">03</div>
+        <div>
+          <div class="tl-phase">Fase 2</div>
+          <div class="tl-title">Contrato e acerto financeiro</div>
+          <div class="tl-desc">Assinatura do contrato e pagamento da primeira parcela (50%). A partir daqui o desenvolvimento começa oficialmente.</div>
+        </div>
+        <div class="tl-badge payment">50% ENTRADA</div>
+      </div>
+
+      <!-- 04 -->
+      <div class="tl-item">
+        <div class="tl-dot">04</div>
+        <div>
+          <div class="tl-phase">Fase 3 · etapa crítica</div>
+          <div class="tl-title">Organização e estruturação da base de conhecimento</div>
+          <div class="tl-desc">Todo o conteúdo enviado será organizado, categorizado e estruturado antes de ir para a IA. Não dá para simplesmente "jogar tudo na IA" — o material precisa ser tratado para que ela consiga consultar e responder de forma precisa. Esta etapa define a qualidade de tudo que vem depois.</div>
+        </div>
+        <div class="tl-badge" style="color:var(--cyan);border-color:var(--cyan2);">RAG</div>
+      </div>
+
+      <!-- 05 -->
+      <div class="tl-item">
+        <div class="tl-dot">05</div>
+        <div>
+          <div class="tl-phase">Fase 4</div>
+          <div class="tl-title">Preparação da infraestrutura</div>
+          <div class="tl-desc">Setup do servidor, banco de dados e n8n na nossa estrutura — sem custo adicional por 2 dias de evento. Integração com WhatsApp (API Oficial via Meta ou Evolution API via QR Code, conforme escolha do cliente). Custo de infra: R$ 50 — absorvido por nós.</div>
+        </div>
+        <div class="tl-badge">ACESSOS</div>
+      </div>
+
+      <!-- 06 -->
+      <div class="tl-item">
+        <div class="tl-dot">06</div>
+        <div>
+          <div class="tl-phase">Fase 5</div>
+          <div class="tl-title">Desenvolvimento do bot e da IA</div>
+          <div class="tl-desc">Construção dos fluxos de atendimento, integração GPT + RAG, configuração da escuta ativa de feedbacks e validação das respostas com os dados da Maple Bear.</div>
+        </div>
+      </div>
+
+      <!-- 07 -->
+      <div class="tl-item">
+        <div class="tl-dot">07</div>
+        <div>
+          <div class="tl-phase">Fase 6 · apenas Plano Premium</div>
+          <div class="tl-title">Construção do Dashboard inteligente</div>
+          <div class="tl-desc">Painel personalizado com assuntos mais falados, dados coletados dos franqueados, insights automáticos, tópicos em destaque, próximos passos sugeridos e análises baseadas nos documentos enviados.</div>
+        </div>
+        <div class="tl-badge" style="color:var(--gold);border-color:rgba(240,192,96,0.2);">PREMIUM</div>
+      </div>
+
+      <!-- 08 -->
+      <div class="tl-item">
+        <div class="tl-dot">08</div>
+        <div>
+          <div class="tl-phase">Pré-entrega</div>
+          <div class="tl-title">Testes, validação e go-live</div>
+          <div class="tl-desc">Validação completa com a equipe Maple Bear. Ajustes finais, aprovação e ativação do bot para o evento.</div>
+        </div>
+        <div class="tl-badge payment">50% FINAL</div>
+      </div>
+
+      <!-- 09 -->
+      <div class="tl-item">
+        <div class="tl-dot">09</div>
+        <div>
+          <div class="tl-phase">Durante o evento · 2 dias</div>
+          <div class="tl-title">Plantão em tempo real — já incluso</div>
+          <div class="tl-desc">Fico de plantão durante os 2 dias de evento. Qualquer ajuste que surgir na hora — resposta da IA, fluxo do bot, algo que precise ser corrigido ou melhorado — resolvo imediatamente. Vocês não ficam na mão.</div>
+        </div>
+        <div class="tl-badge" style="color:var(--green);border-color:rgba(52,211,153,0.2);">INCLUSO</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ CTA ══ -->
+<section id="cta">
+  <div class="cta-bg-text">EYES BOT</div>
+  <div class="cta-inner reveal">
+    <div class="cta-kicker">Pronto para começar?</div>
+    <h2 class="cta-title">Qual plano<br>faz mais sentido<br><span>para vocês?</span></h2>
+    <p class="cta-sub">Os dois entregam um bot completo para o evento. A escolha é sobre o quanto vocês querem de profundidade nos insights pós-evento.</p>
+
+    <div class="cta-choices">
+      <div class="choice-btn cb1">
+        <div class="cb-label">Essential</div>
+        <div class="cb-name">IA + WhatsApp + Excel</div>
+        <div class="cb-price">R$ 10.000</div>
+      </div>
+      <div class="choice-btn cb2">
+        <div class="cb-label">Premium · Recomendado</div>
+        <div class="cb-name">IA + WhatsApp + Dashboard</div>
+        <div class="cb-price">R$ 12.000</div>
+      </div>
+    </div>
+
+    <div class="deadline-box" style="max-width:600px;background:rgba(248,113,113,0.05);border-color:rgba(248,113,113,0.2);">
+      <div class="db-icon">⏱</div>
+      <div class="db-text" style="color:rgba(248,113,113,0.85);">
+        <strong style="color:var(--red);">Esta proposta expira em 3 dias</strong>
+        Para garantir o prazo do evento, precisamos do alinhamento final até segunda-feira. Após isso, o escopo fica travado e o desenvolvimento começa imediatamente.
+      </div>
+    </div>
+
+    <div class="cta-footer">
+      <span>© 2026 — Eyes Bot × Maple Bear</span>
+      <span>Confidencial · uso interno</span>
+      <span>Proposta válida por 3 dias</span>
+    </div>
+  </div>
+</section>
 
 <script>
-// NAV shadow on scroll
-const nav = document.getElementById('nav');
-window.addEventListener('scroll', () => nav.classList.toggle('shadow', scrollY > 20));
+// cursor
+const cursor = document.getElementById('cursor');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX - 4 + 'px';
+  cursor.style.top = e.clientY - 4 + 'px';
+});
 
-// Scroll reveal
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
-}, { threshold: 0.1 });
-document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+// reveal on scroll
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('on'); });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
 
-// WhatsApp chat animation
-const chat = document.getElementById('chat');
-const typing1 = document.getElementById('typing1');
-const messages = [
-  { side: 'bot', text: 'Que ótimo! 🎉 Temos algumas opções esta semana. Qual período fica melhor pra você?<br><br>☀️ Manhã — 7h, 8h ou 9h<br>🌤️ Tarde — 15h ou 16h<br>🌙 Noite — 19h ou 20h' },
-  { side: 'user', text: 'Manhã, quarta ou sexta' },
-  { side: 'bot', text: 'Perfeito! Tenho disponível:<br><br>📅 <b>Quarta 08h</b> — com a Prof. Ana<br>📅 <b>Sexta 07h</b> — com a Prof. Ana<br><br>Qual prefere?' },
-  { side: 'user', text: 'Quarta às 8h' },
-  { side: 'bot', text: '✅ Aula experimental confirmada!<br><br><b>Quarta-feira às 08h</b><br>Prof. Ana — Vila Madalena<br><br>Vou te lembrar na véspera 😊 Qualquer dúvida é só chamar!' },
-];
-let idx = 0;
+document.querySelectorAll('.reveal, .stagger').forEach(el => obs.observe(el));
 
-function addMsg(msg, typingEl) {
-  const div = document.createElement('div');
-  div.className = `w-msg ${msg.side}`;
-  const now = new Date();
-  div.innerHTML = `${msg.text}<div class="w-time">${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}</div>`;
-  div.style.opacity = '0';
-  div.style.transform = 'translateY(8px)';
-  chat.insertBefore(div, typingEl);
-  setTimeout(() => { div.style.transition = 'all .35s'; div.style.opacity = '1'; div.style.transform = 'translateY(0)'; }, 30);
-}
-
-function nextMsg() {
-  if (idx >= messages.length) return;
-  const msg = messages[idx++];
-  // show typing first
-  typing1.style.display = 'flex';
-  chat.scrollTop = chat.scrollHeight;
-  setTimeout(() => {
-    typing1.style.display = 'none';
-    addMsg(msg, typing1);
-    chat.scrollTop = chat.scrollHeight;
-    if (idx < messages.length) {
-      // next message with delay
-      const delay = msg.side === 'user' ? 800 : 2200;
-      setTimeout(nextMsg, delay);
-    }
-  }, msg.side === 'bot' ? 1400 : 600);
-}
-
-// Start chat after 1.5s
-setTimeout(nextMsg, 1500);
+// plan chip scroll
+document.querySelectorAll('.plan-chip').forEach((chip, i) => {
+  chip.addEventListener('click', () => {
+    document.getElementById('plans').scrollIntoView({ behavior: 'smooth' });
+  });
+});
 </script>
-
 </body>
 </html>
